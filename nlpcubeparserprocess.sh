@@ -1,6 +1,6 @@
 #!/bin/bash
 source python3envmetrix/bin/activate
-python3 ./stanfordparser.py $1 $2 $3
+python3 ./laguntest.py $1 $2 $3
 #python3 ./nlpcubeparser.py textos/english.doc.txt
 #Para salir
 deactivate

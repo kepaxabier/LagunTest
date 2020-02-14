@@ -181,7 +181,7 @@ function instalandoPaquetesEntornoVirtualPython3(){
  pip3 install -U nltk
  pip3 install -U wordcloud
  pip3 install matplotlib
-
+pip3 install textract
 pip3 install -U numpy
 
 pip3 install pandas
@@ -189,7 +189,12 @@ pip3 install -U nlpcube
 sudo apt install build-essential
 pip3 install -U wordfreq
 pip3 install pywsd
-
+pip3 install wikipedia
+pip3 install wikidata
+pip3 install sparqlwrapper
+pip3 install request
+pip3 install beautifulsoup4
+pip3 install stanfordnlp
 #Instalar jupiter:
 #python3 -m pip install --upgrade pip
 #python3 -m pip install jupyter
