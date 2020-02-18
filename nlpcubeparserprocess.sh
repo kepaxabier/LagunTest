@@ -5,7 +5,7 @@ python3 ./laguntest.py $1 $2 $3 $4
 #Para salir
 deactivate
 cd /var/www/html/erraztest/DepSVG-master
-perl -I src demo/conll_to_svg.perl --dir $4 < $1.syntax.csv
+perl -I src demo/conll_to_svg.perl --dir $4 < $4$1.syntax.csv
 cd $4
 for i in *.svg
 do 
