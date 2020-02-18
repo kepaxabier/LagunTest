@@ -919,6 +919,11 @@ class Main(object):
         # language='english'
         # language='basque'
         language = sys.argv[3]
+        #####carpeta temporal############
+        carpeta = sys.argv[4]
+        #carpeta = "/media/datos/Dropbox/ikerkuntza/metrix-env/LagunTest2/tmp/"
+        input = carpeta + input
+
         # difficult=difficultlevel(language,difficult_level)
         # print(difficult)
         # Carga wordfrequency euskara eta definizioak
