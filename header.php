@@ -16,12 +16,12 @@
 </nav>
 <nav class="menu">
   <ol>
-    <li class="menu-item"><a href="index.php">Text Analyze</a></li>
-    <li class="menu-item"><a href="analize.php">File Analyze</a></li>
+    <li class="menu-item"><a href="index.php">Analyze Text</a></li>
+    <li class="menu-item"><a href="analize.php">Analyze File</a></li>
     <li class="menu-item"><a href="wordcloud.php">Word Cloud</a></li>
     <li class="menu-item"><a href="draw.php">Pictures</a></li>
     <li class="menu-item"><a href="color.php">Definitions</a></li>
-    <li class="menu-item"><a href="synomy.php">Synomym List</a></li>
+    <li class="menu-item"><a href="synomy.php">Synonym List</a></li>
     <li class="menu-item"><a href="syntax.php">Syntax</a></li>
 
 

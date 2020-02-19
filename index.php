@@ -32,7 +32,7 @@ require "header.php"
                         echo $_POST['inputtext'];
                     }else{
                         echo "Milk is a white liquid food produced by the mammary glands of mammals. It is the primary source of nutrition for infant mammals. Early-lactation milk contains colostrum, which carries the mother's antibodies to its young. It contains many other nutrients including protein and lactose. \n";
-                    }
+					}
                 ?>
             </textarea>
 
@@ -47,79 +47,53 @@ require "header.php"
 				<option value="a">Alto</option>
 			</select>
 			<select name="language">
-				<option value="eu">Euskera</option>
-				<option value="en">English</option>
+				<option value="basque">Euskera</option>
+				<option value="english">English</option>
 			</select>
         </form>
     </div>
 
     <?php
 		session_start();
-		$workdir = "/var/www/html/erraztest/";
-		$destDir = "/var/www/html/erraztest/tmp";
+		$destDir = "/var/www/html/erraztest/";
 		$binPath = "/var/www/html/erraztest/nlpcubeparserprocess.sh";
 		$fileId = date('Y-m-d_His_');
+		$id = uniqid(time(), true);
 		// Execute this code if the submit button is pressed.
 		if (isset($_POST['inputtext'])) {
-			//Visualizar el contenido del inputtext
-			//echo ('Input text:&nbsp;');
-			//echo $_POST['inputtext'];
-			//$fn es un nombre aletorio del pelo de /tmp/2018-12-14_162700_GVC0f3 en la carpeta /tmp
-			//tempnam — Crea un fichero con un nombre de fichero único Descripción string tempnam ( string $dir , string $prefix )
-			//$fn = tempnam (sys_get_temp_dir(), $fileId); 
-			$fn = tempnam ($destDir, $fileId);
-			//echo $fn;
-			/*echo "<p>";
-			echo ($fn);
-			echo "</p>";*/
-			// da permisos rw_r__r__
-			chmod ($fn,0664);
+			//Crear carpeta aleatoria
+			mkdir($destDir.$id, 0770);
+			//Crear fichero con el texto introducido dentro de la carpeta aleatorio
+			$textPath = $destDir.$id."/text.txt";
+
 			// Si lo ha creado vacio
-			if ($fn) {
+			if ($textPath) {
 				//abrimos
-				$f = fopen ($fn, "w");
+				$f = fopen ($textPath, "w");
+				chmod($textPath, 0664);
+
 				if ($f){
-					//escibimos el contenido de la caja en el 
+					//escibimos el contenido de la caja en el fichero
 					fwrite($f,$_POST['inputtext']);
 					fwrite($f,"\n");
 					//cerramos el fichero
 					fclose($f);
 					//obtenemos el nombre del fichero sin path
-					$basefn = basename($fn);
+					$basefn = basename($textPath);
 					//dos2unix - Convertidor de archivos de texto de formato DOS/Mac a Unix y viceversa
-					exec("/usr/bin/dos2unix ".$fn);
-					#The php script will look for a script "x.sh" in the current directory
-					#the script will run as the user of the web-server - typically "www-data".
-					#Bai ->  $sysout = shell_exec("cp /tmp/".$basefn." ".$fn.".out.csv" );
-					
-					#$sysout = exec($binPath." /tmp/".$basefn);
-					#Este me crea vacio!!!!!
-					#exec("/var/www/neurriak.com/html/webprocess.sh /var/www/neurriak.com/html/webfiles/proba2.txt", $output, $return);
-					exec($binPath." ".$fn." ".$_POST['difficult']." ".$_POST['language'], $output, $return);
-					/*echo "<p>";
-					echo ($binPath." ".$fn.":".$output.":".$return);
-					echo "</p>"; */
-					// Return will return non-zero upon an error
-					#if (!$return) {
-						#		echo "Created Successfully";
-					#	} 
-					#    else {
-					#		echo "not created";
-					#	}
-						#echo "<p>";
-						#echo ($sysout);
-						#echo "</p>";*/
-					#No ->   $sysout = shell_exec($binPath." /tmp/".$basefn);
+					exec("/usr/bin/dos2unix ".$textPath);
+					#Ejecutar laguntest.py
+					exec($binPath." ".$textPath." ".$_POST['difficult']." ".$_POST['language']." ".$destDir.$id, $output, $return);
+
 					$emaPath = $fn.".out.csv";
 					$_SESSION["path"] = $emaPath;
 					$_SESSION["basefn"] = $basefn;
-                    #echo "<input type='hidden' name='ruta' value='" . $emaPath . "' />";
                 }
 
-			} else { 
+			} else {
 				echo("<p>Erroreren bat egon da fitxategi tenporala sortzean.</p>");
 			}
-			
+
 		}
     ?>
 
