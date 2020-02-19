@@ -1,4 +1,5 @@
 # coding=utf-8
+import os
 import nltk
 import sys
 import re
@@ -154,16 +155,15 @@ def imagenet_offset2url(offset):
 
 
 #######################################################
-import os
-from pywsd import disambiguate
-from pywsd.similarity import max_similarity as maxsim
+#from pywsd import disambiguate
+#from pywsd.similarity import max_similarity as maxsim
 
 
-def sentencewsd(contexts, word):
-    for context in contexts:
-        if context[0] == word:
-            return context[1]
-    return None
+#def sentencewsd(contexts, word):
+#    for context in contexts:
+#        if context[0] == word:
+#            return context[1]
+#    return None
 
 
 ####analizador sintactico#######################
@@ -494,159 +494,175 @@ class Document:
 
 
 
-    def calculate_all_atributes(self, input):
-            ####ouput files#################
-            # estadisticos
-            estadisticaoutput = input + ".out.csv"
-            syntaxoutput = input + ".syntax.csv"
+    def calculate_all_atributes(self,input):
+        ####ouput files#################
+        #estadisticos
+        estadisticaoutput=input+".out.csv"
+        syntaxoutput=input+".syntax.csv"
 
-            # Write all the information in the file
-            estfile = open(estadisticaoutput, "w")
-            syntaxfile = open(syntaxoutput, "w")
-            # Si pywsd=True
-            pywsd = False
-            palabras_diferentes = []
-            for p in self.paragraph_list:
-                for s in p.sentence_list:
-                    if pywsd == True:
-                        text = s.sent2text()
-                        contexts = disambiguate(text)
-                    else:
-                        s.set_ukb_sense(self.language)
-                        # s.printwordsense()
-                    if not s.text == "":
-                        for w in s.word_list:
-                            definition = ''
-                            examples = ''
-                            synonyms = []
-                            offset = 0
-                            nueve = '_'
-                            url = ''
-                            # print(str(w.index) + "\t" + w.text + "\t" + w.lemma + "\t" + w.upos + "\t" + w.xpos + "\t" + w.feats + "\t" + str(w.governor) + "\t" + str(w.dependency_relation) +"\t")
-                            # Si palabra no esta repetida, es dificil, tiene cierta POS: ayuda!
-                            if (not len(w.text) == 1) and w.text.isalpha() and (
-                                    w.upos == 'PROPN' or w.upos == 'NOUN' or w.upos == 'VERB') and (
-                                    int(w.get_rare_level(self.language)) <= int(
-                                    self.difficult)) and w.lemma.lower() not in palabras_diferentes:
-                                # Si la palabra es un content word
-                                palabras_diferentes.append(w.lemma.lower())
-                                if w.upos == 'NOUN' or w.upos == 'PROPN':
-                                    patron = 'n'
-                                if w.upos == 'VERB':
-                                    patron = 'v'
+        #Write all the information in the file
+        estfile = open(estadisticaoutput, "w")
+        syntaxfile = open(syntaxoutput, "w")
+        #Si pywsd=True
+        #pywsd=False
+        palabras_diferentes = []
+        for p in self.paragraph_list:
+            for s in p.sentence_list:
+                #if pywsd==True:
+                    #text=s.sent2text()
+                    #contexts=disambiguate(text)
+                #else:
+                s.set_ukb_sense(self.language)
+                #s.printwordsense()
+                if not s.text == "":
+                    for w in s.word_list:
+                        synset_desambiguado=None
+                        definition = '_'
+                        examples = '_'
+                        synonyms = []
+                        offset = 0
+                        sinonimoak = '_' 
+                        url = '_'   
+                        #print(str(w.index) + "\t" + w.text + "\t" + w.lemma + "\t" + w.upos + "\t" + w.xpos + "\t" + w.feats + "\t" + str(w.governor) + "\t" + str(w.dependency_relation) +"\t")
+                        #Si la palabra tiene más de un caracter
+                        #Si es alfabético {a-z,A-Z, pero tambien ñ y acentos}
+                        #Si es nombre, nombre propio o verbo ppal
+                        #Si es rara o dificil
+                        #Si no ha sido tratada lema minúscula
+                        if (not len(w.text) == 1) and w.text.isalpha() and (w.upos == 'PROPN' or w.upos == 'NOUN' or w.upos == 'VERB') and (int(w.get_rare_level(self.language))<=int(self.difficult)) and w.lemma.lower() not in palabras_diferentes:
+                            #Si la palabra es un content word
+                            palabras_diferentes.append(w.lemma.lower())
+                            if w.upos=='NOUN' or w.upos=='PROPN':
+                                patron='n'
+                            if w.upos=='VERB':
+                                patron='v'
+                            #si ingles 
+                            if (self.language == 'english'):
+                                #obtengo los posibles synsets del lema
+                                synset_ids = wn.synsets(w.lemma)
+                            if (self.language == 'basque'):
+                                synset_ids = wn.synsets(w.lemma, lang='eus')
+                            #Si UKB o PyWsd
+                            #if pywsd==True:
+                                #synset_desambiguado=sentencewsd(contexts,w.text)
+                            #else:
+                            #UKB
+                            offset_desambiguado=s.get_ukb_sense(w.lemma)
+                            if offset_desambiguado=='':
+                                synset_desambiguado=None
+                            else:
+                                #obtener el synset para ese offset delvuelto por UKB
+                                for synset in synset_ids:
+                                    synsetoffset=synset.offset()
+                                    if str(synsetoffset) in offset_desambiguado:
+                                        synset_desambiguado=synset
+                            #Si desambigua
+                            if synset_desambiguado is not None:
+                                pass
+                                #print("desambiguador:"+str(synset_desambiguado))
+                            else:
+                            #No desambiguado, el primero
+                                count = 0
+                                for synset in synset_ids:
+                                    if w.upos=='NOUN' or w.upos=='PROPN':
+                                        patron='.n.'
+                                    if w.upos=='VERB':
+                                        patron='.v.'
+                                    if patron in synset.name() and count == 0:
+                                        count = 1
+                                        synset_desambiguado=synset
+                                        #print("Selecciono el primer synset:"+str(synset_desambiguado))
+                            #hay un synset seleccionado, obtengo offset, def, ex,syn depende del idioma?
+                            if synset_desambiguado is not None:
+                                offset = synset_desambiguado.offset()
                                 if (self.language == 'english'):
-                                    synset_ids = wn.synsets(w.lemma)
-                                    if pywsd == True:
-                                        synset_desambiguado = sentencewsd(contexts, w.text)
-                                    else:
-                                        offset_desambiguado = s.get_ukb_sense(w.lemma)
-                                        if offset_desambiguado == '':
-                                            synset_desambiguado = None
-                                        else:
-                                            for synset in synset_ids:
-                                                synsetoffset = synset.offset()
-                                                if str(synsetoffset) in offset_desambiguado:
-                                                    synset_desambiguado = synset
-
+                                    definition = synset_desambiguado.definition()
+#                                     #traduccion es
+#                                     traduccion_es=synset_desambiguado.lemmas('spa')
+#                                     es_list=[]
+#                                     for l in traduccion_es:
+#                                         es_list.append(l.name())
+                                    #traduccion eu
+#                                     traduccion_eu=synset_desambiguado.lemmas('eus') 
+#                                     eu_list=[]
+#                                     for l in traduccion_eu:
+#                                         eu_list.append(l.name())
+                                    examples = synset_desambiguado.examples()
+                                    #sinonimos
+                                    for l in synset_desambiguado.lemma_names():
+                                        synonyms.append(l.lower())
+                                        try:
+                                            synonyms.remove(w.text.lower())
+                                        except:
+                                            pass
+                                        try:
+                                            synonyms.remove(w.lemma.lower())
+                                        except:
+                                            pass
                                 if (self.language == 'basque'):
-                                    synset_ids = wn.synsets(w.lemma, lang='eus')
-                                    synset_desambiguado = None
-                                # Si desambigua
-                                if synset_desambiguado is not None:
-                                    print("desambiguador:" + str(synset_desambiguado))
-
+                                    definition = EusWN_definizioak.definition_eu(offset)
+                                    #sinonimos
+                                    for l in synset_desambiguado.lemma_names('eus'):
+                                        synonyms.append(l.lower())
+                                        try:
+                                            synonyms.remove(w.text.lower())
+                                        except:
+                                            pass
+                                        try:
+                                            synonyms.remove(w.lemma.lower())
+                                        except:
+                                            pass
+                                #url imagen
+                                if w.upos=='NOUN' or w.upos=='PROPN':
+                                    url=imagenet_offset2url(offset)
+                                    #print("imagenet:"+url)
+                                    if url=='':
+                                        url = wikidata_offset2url(offset)
+                                        #print("wikidata:"+url)
+                                        if url=='':
+                                            text=w.text.strip()
+                                            text=text.lower()
+                                            url=wikipedia_offset2url(text)
+                                            #print("wikipedia:"+url)
+                                if not set_is_empty(set(synonyms)):
+                                    sinonimoak=w.text+":"+str(set(synonyms))
+                                    sinonimoak=sinonimoak.replace('\n', '')
+                                    sinonimoak=sinonimoak.replace('\t', '')
                                 else:
-                                    # No desambiguado, el primero
-                                    count = 0
-                                    for synset in synset_ids:
-                                        if w.upos == 'NOUN' or w.upos == 'PROPN':
-                                            patron = '.n.'
-                                        if w.upos == 'VERB':
-                                            patron = '.v.'
-                                        if patron in synset.name() and count == 0:
-                                            count = 1
-                                            synset_desambiguado = synset
-                                            print("Selecciono el primer synset:" + str(synset_desambiguado))
-                                # hay un synset seleccionado, obtengo offset, def, ex,syn depende del idioma?
-                                if synset_desambiguado is not None:
-                                    offset = synset_desambiguado.offset()
-                                    if (self.language == 'english'):
-                                        definition = synset_desambiguado.definition()
-                                        #                                     #traduccion es
-                                        #                                     traduccion_es=synset_desambiguado.lemmas('spa')
-                                        #                                     es_list=[]
-                                        #                                     for l in traduccion_es:
-                                        #                                         es_list.append(l.name())
-                                        # traduccion eu
-                                        #                                     traduccion_eu=synset_desambiguado.lemmas('eus')
-                                        #                                     eu_list=[]
-                                        #                                     for l in traduccion_eu:
-                                        #                                         eu_list.append(l.name())
-                                        examples = synset_desambiguado.examples()
-                                        # sinonimos
-                                        for l in synset_desambiguado.lemma_names():
-                                            synonyms.append(l.lower())
-                                            try:
-                                                synonyms.remove(w.text.lower())
-                                            except:
-                                                pass
-                                            try:
-                                                synonyms.remove(w.lemma.lower())
-                                            except:
-                                                pass
-                                    if (self.language == 'basque'):
-                                        definition = EusWN_definizioak.definition_eu(offset)
-                                        # sinonimos
-                                        for l in synset_desambiguado.lemma_names('eus'):
-                                            synonyms.append(l.lower())
-                                            try:
-                                                synonyms.remove(w.text.lower())
-                                            except:
-                                                pass
-                                            try:
-                                                synonyms.remove(w.lemma.lower())
-                                            except:
-                                                pass
-                                    # url imagen
-                                    if w.upos == 'NOUN' or w.upos == 'PROPN':
-                                        url = imagenet_offset2url(offset)
-                                        print("imagenet:" + url)
-                                        if url == '':
-                                            url = wikidata_offset2url(offset)
-                                            print("wikidata:" + url)
-                                            if url == '':
-                                                text = w.text.strip()
-                                                text = text.lower()
-                                                url = wikipedia_offset2url(text)
-                                                print("wikipedia:" + url)
-                                    if not set_is_empty(set(synonyms)):
-                                        nueve = w.text + ":" + str(set(synonyms))
-                                    else:
-                                        nueve = "_"
+                                    sinonimoak="_"
+                                if definition=='':
+                                    definition="_"
                                 else:
-                                    print("Ningun synset!!!")
-                            print(str(
-                                w.index) + "\t" + w.text + "\t" + w.lemma + "\t" + w.upos + "\t" + w.xpos + "\t" + w.feats + "\t" + str(
-                                w.governor) + "\t" + str(w.dependency_relation) + "\t" + definition.replace('\n',
-                                                                                                            '') + "\t" + nueve.replace(
-                                '\n', '') + "\t" + url + "\t" + str(examples) + "\t_")
-                            # print(str(w.index)+"\t"+w.text+"\t"+w.lemma+"\t"+w.upos+"\t"+w.xpos+"\t"+w.feats+"\t"+str(w.governor)+"\t"+str(w.dependency_relation)+"\t"+str(w.wordfrequency)+"\t"+str(w.get_rare_level(self.language))+"\t"+str(self.difficult))
-                            # print(str(entry.index)+"\t"+entry.text+"\t"+entry.lemma+"\t"+entry.upos+"\t"+entry.xpos+"\t"+entry.feats+"\t"+str(entry.governor)+"\t"+str(entry.dependency_relation)+"\t"+definition.replace('\n', '')+"\t"+nueve.replace('\n', '')+"\t"+url+"\t"+str(examples)+"\t_")
-                            syntaxfile.write("%s" % str(
-                                w.index) + "\t" + w.text + "\t" + w.lemma + "\t" + w.upos + "\t" + w.xpos + "\t" + w.feats + "\t" + str(
-                                w.governor) + "\t" + str(w.dependency_relation[:4]) + "\t_\t_")
-                            estfile.write("%s" % str(
-                                w.index) + "\t" + w.text + "\t" + w.lemma + "\t" + w.upos + "\t" + w.xpos + "\t" + w.feats + "\t" + str(
-                                w.governor) + "\t" + str(w.dependency_relation[:4]) + "\t" + definition.replace('\n',
-                                                                                                                '') + "\t" + nueve.replace(
-                                '\n', '') + "\t" + url + "\t" + str(examples) + "\t_")
-                            syntaxfile.write('\n')
-                            estfile.write('\n')
-                    syntaxfile.write('\n')
-                    estfile.write('\n')
-            syntaxfile.close()
-            estfile.close()
-
+                                    definition=definition.replace('\n', '')
+                                    definition=definition.replace('\t', ' ')
+                                    definition=definition.replace('\r', '')
+                                if len(examples) == 0:
+                                    examples="_"
+                                else:
+                                    examples=str('. '.join(examples))
+                                    examples=examples.replace('\n', '')
+                                    examples=examples.replace('\t', ' ')
+                                if url=='':
+                                    url="_"
+                                else:
+                                    url=url.replace('\n', '')
+                                    url=url.replace('\t', ' ')
+                                #print("\nSinonimoak:"+sinonimoak+":Sinofin")
+                                #print("\nDefinizioak:"+definition+":Deffin")
+                                #print("\nexamples:"+examples+":Exafin")
+                                #print("\nurl:"+url+":Urlfin")
+                            else:
+                                #print("Ningun synset!!!")
+                                pass
+                        #print(str(w.index)+"\t"+w.text+"\t"+w.lemma+"\t"+w.upos+"\t"+w.xpos+"\t"+w.feats+"\t"+str(w.governor)+"\t"+str(w.dependency_relation[:4])+"\t"+definition+"\t"+sinonimoak+"\t"+url+"\t"+examples+"\t_")
+                        syntaxfile.write("%s" % str(w.index)+"\t"+w.text+"\t"+w.lemma+"\t"+w.upos+"\t"+w.xpos+"\t"+w.feats+"\t"+str(w.governor)+"\t"+str(w.dependency_relation[:4])+"\t_\t_")
+                        estfile.write("%s" % str(w.index)+"\t"+w.text+"\t"+w.lemma+"\t"+w.upos+"\t"+w.xpos+"\t"+w.feats+"\t"+str(w.governor)+"\t"+str(w.dependency_relation[:4])+"\t"+definition+"\t"+sinonimoak+"\t"+url+"\t"+examples+"\t_")
+                        syntaxfile.write('\n')
+                        estfile.write('\n')
+                syntaxfile.write('\n')
+                estfile.write('\n')
+        syntaxfile.close()
+        estfile.close()
 
 class Paragraph:
 
@@ -966,7 +982,7 @@ class Main(object):
 
         document = cargador.get_estructure(text)
         indicators = document.calculate_all_atributes(input)
-        print(text)
+        #print(text)
 
 
 main = Main()
