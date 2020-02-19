@@ -16,9 +16,9 @@ from wordfreq import zipf_frequency
 
 #################WORDNET##########################
 # Instalar 'wordnet'
-nltk.download('wordnet')
+#nltk.download('wordnet')
 # Add multilingual wordnet
-nltk.download('omw')
+#nltk.download('omw')
 from nltk.corpus import wordnet as wn
 
 
@@ -133,6 +133,7 @@ def imagenet_offset2url(offset):
     if (page.status_code == 200):
         #BeautifulSoup is an HTML parsing library puts the content of the website into the soup variable, each url on a different line
         soup = BeautifulSoup(page.content, 'html.parser')
+        #soup = BeautifulSoup(page.content, 'lxml')
         str_soup=str(soup)#convert soup to string so it can be split
         split_urls=str_soup.split('\r\n')#split so each url is a different possition on a list
         for url in split_urls:
@@ -957,11 +958,11 @@ class Main(object):
 
         # Carga del modelo Stanford/NLPCube
         cargador = NLPCharger(language, model, directory, difficult_level)
-        cargador.download_model()
+        #cargador.download_model()
         cargador.load_model()
         # Carga StopWords
         stopw = Stopwords(language)
-        stopw.download()
+        #stopw.download()
         stopw.load()
         # stopw.print()
 
