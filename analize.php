@@ -70,27 +70,28 @@ require "header.php"
 	  }
 	  return TRUE;
 	}
-	$workdir = "/var/www/html/erraztest/";
-	$destDir = "/var/www/html/erraztest/tmp";
-	$binPath = "/var/www/html/erraztest/nlpcubeparserprocess.sh";
-	$fileId = date('Y-m-d_His_');
+   	 session_start();
+         $destDir = "/var/www/html/erraztest/";
+         $binPath = "/var/www/html/erraztest/nlpcubeparserprocess.sh";
 
 	// Execute this code if the submit button is pressed.
 	if (isset($_POST['submit'])) {
+		$id = uniqid(true);
+		//Crear carpeta aleatoria
+                mkdir($destDir.$id, 0770);
+		
 		$inputfile = $_FILES['infile']['name'][0];
-		$inputfilepath = "tmp/".$inputfile;
+		$inputfilepath = $id.$inputfile;
 		#echo "Nombre: ".$inputfile;
 
-		#Cargar archivo al directorio /tmp
-		for ($i = 0; $i < count($_FILES['infile']['name']); $i++) {
-			#echo " <a href='#".$i."'>Results of ".$_FILES['infile']['name'][$i]."</a><br>";
-			$moved = move_uploaded_file($_FILES['infile']['tmp_name'][$i], "tmp/" . $_FILES['infile']['name'][$i]);
-			if( $moved ) {
-				echo "<br>";
-			} else {
-				echo "The files could not be loaded. <br>";
-			}
+		#Guardar archivo al directorio nuevo
+		$moved = move_uploaded_file($_FILES['infile']['tmp_name'][0], $id.$inputfile);
+		if( $moved ) {
+			echo "<br>";
+		} else {
+			echo "The files could not be loaded. <br>";
 		}
+		
 
 		#Comprobar extension
 		$ext = end(explode('.', $inputfile));
@@ -99,10 +100,10 @@ require "header.php"
 		if($ext === "odt"){
 			$zip = new ZipArchive;
 			if(true === $zip->open($inputfilepath)){
-				$zip->extractTo("tmp/");
+				$zip->extractTo($id);
 				$zip->close();
 			}
-			$content = file_get_contents("tmp/content.xml");
+			$content = file_get_contents($id."/content.xml");
 			#echo ".odt: ".$content."<br>";
 		}else if($ext === "doc"){
 			$content = shell_exec('antiword '.'/var/www/html/erraztest/'.$inputfilepath);
@@ -111,33 +112,40 @@ require "header.php"
 			$content = file_get_contents($inputfilepath);
 			#echo ".txt or .docx: ".$content."<br>";
 		}
+		##################################################
+		
+			
+		//Crear fichero con el texto introducido dentro de la carpeta aleatorio
+		$textPath = $destDir.$id."/text.txt";
 
-		#Crear fichero con contenido
-		$fileId = date('Y-m-d_His_');
-		$fn = tempnam ($destDir, $fileId);
-		chmod ($fn,0664);
 		// Si lo ha creado vacio
-		if ($fn) {
+	
+		if ($textPath) {
 			//abrimos
-			$f = fopen ($fn, "w");
+			$f = fopen ($textPath, "w");
+			chmod($textPath, 0664);
+
 			if ($f){
-				//escibimos el contenido de la caja en el 
+				//escibimos el contenido de la caja en el fichero
 				fwrite($f,$content);
 				fwrite($f,"\n");
 				//cerramos el fichero
 				fclose($f);
 				//obtenemos el nombre del fichero sin path
-				$basefn = basename($fn);
+				$basefn = basename($textPath);
 				//dos2unix - Convertidor de archivos de texto de formato DOS/Mac a Unix y viceversa
-				exec("/usr/bin/dos2unix ".$fn);
-				exec($binPath." ".$fn." ".$_POST['difficult']." ".$_POST['language'], $output, $return);
-				$emaPath = $fn.".out.csv";
-				chmod ($fn,0644);
-				#echo $emaPath;
+				exec("/usr/bin/dos2unix ".$textPath);
+				$comando=$binPath." text.txt ".$_POST['difficult']." ".$_POST['language']." ".$destDir.$id;	
+				exec($comando, $output, $return);
+                                #echo("<p>".$return."</p>");
+				$emaPath = $textPath.".out.csv";
 				$_SESSION["path"] = $emaPath;
-				$_SESSION["basefn"] = $basefn;
-			}
+				$_SESSION["basefn"] = $destDir.$id;
+				$_SESSION["carpeta"]=$id;
+                	}
+
 		}
+   
 	}
     ?>
 	<br>

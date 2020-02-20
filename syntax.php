@@ -16,6 +16,7 @@ require "header.php"
 session_start();
 $emaPath = $_SESSION["path"];
 $basefn = $_SESSION["basefn"];
+$carpeta= $_SESSION["carpeta"];
 
 if (file_exists($emaPath)) //&& filesize($emaPath) > 0)  
 {
@@ -55,14 +56,15 @@ if (file_exists($emaPath)) //&& filesize($emaPath) > 0)
     
     for ($j=1; $j < $numberofsentences+1; $j++) {
 		#$file="tmp/".$basefn.".png";
-		$ficheros="tmp/".$j.".png";
+	    	$ficheros=$carpeta."/".$j.".png";
+                #echo "<p> ".$ficheros."</p>";
 		#echo '<img src="'.$ficheros.'">'; #width="600" height="400">';
 		#echo "<hr>";
-		$parsing=$parsing.'<img src="'.$ficheros.'"><hr>';
+		$parsing=$parsing.'<img src="'.$ficheros.'"/><hr>';
 	}
 	
 
-
+        #echo "<p>".$parsing."</p>";
 	echo "<div class='image' id='emadiv' style='text-align: center;'>".$parsing."<br>".$depreldescription."</div>";
                     
 }

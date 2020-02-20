@@ -41,7 +41,7 @@ class EusWN_definizioak():
     def load(self):
         if self.lang == "basque":
             EusWN_definizioak.defi = {}
-            with codecs.open('eu/EusWN_definizioak.tsv', encoding='utf-8') as fe:
+            with codecs.open('/var/www/html/erraztest/eu/EusWN_definizioak.tsv', encoding='utf-8') as fe:
                 next(fe)
                 for line in fe:
                     (hitza, synseta, definizioa) = line.split("\t")
@@ -199,13 +199,14 @@ class Stopwords:
 
     def load(self):
         if self.lang == "english":
-            # Stopwords.stop_words = stopwords.words('english')
-            Stopwords.stop_words = set(line.strip() for line in open('en/stopwords.txt'))
+            #Stopwords.stop_words = stopwords.words('english')
+            Stopwords.stop_words = set(line.strip() for line in open('/var/www/html/erraztest/en/stopwords.txt'))
         if self.lang == "spanish":
             # Stopwords.stop_words = stopwords.words('spanish')
-            Stopwords.stop_words = set(line.strip() for line in open('es/stopwords.txt'))
+            Stopwords.stop_words = set(line.strip() for line in open('/var/www/html/erraztest/es/stopwords.txt'))
         if self.lang == "basque":
-            Stopwords.stop_words = set(line.strip() for line in open('eu/stopwords.txt'))
+            Stopwords.stop_words = set(line.strip() for line in open('/var/www/html/erraztest/eu/stopwords.txt'))
+            #line.decode('utf-8').strip()
 
 
 class NLPCharger:
@@ -945,7 +946,7 @@ class Main(object):
         # print(difficult)
         # Carga wordfrequency euskara eta definizioak
         if language == "basque":
-            maiztasuna = Maiztasuna("eu/LB2014Maiztasunak_zenbakiakKenduta.csv")
+            maiztasuna = Maiztasuna("/var/www/html/erraztest/eu/LB2014Maiztasunak_zenbakiakKenduta.csv")
             maiztasuna.load()
             # Euskarazko definizioak
             eusdef = EusWN_definizioak(language)

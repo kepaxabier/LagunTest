@@ -58,7 +58,7 @@ require "header.php"
 		$destDir = "/var/www/html/erraztest/";
 		$binPath = "/var/www/html/erraztest/nlpcubeparserprocess.sh";
 		$fileId = date('Y-m-d_His_');
-		$id = uniqid(time(), true);
+		$id = uniqid(true);
 		// Execute this code if the submit button is pressed.
 		if (isset($_POST['inputtext'])) {
 			//Crear carpeta aleatoria
@@ -82,12 +82,14 @@ require "header.php"
 					$basefn = basename($textPath);
 					//dos2unix - Convertidor de archivos de texto de formato DOS/Mac a Unix y viceversa
 					exec("/usr/bin/dos2unix ".$textPath);
-					#Ejecutar laguntest.py
-					exec($binPath." ".$textPath." ".$_POST['difficult']." ".$_POST['language']." ".$destDir.$id, $output, $return);
-
-					$emaPath = $fn.".out.csv";
+					$comando=$binPath." text.txt ".$_POST['difficult']." ".$_POST['language']." ".$destDir.$id;
+					#echo("<p>".$comando."/</p>");
+					exec($comando, $output, $return);
+                                        #echo("<p>".$return."</p>");
+					$emaPath = $textPath.".out.csv";
 					$_SESSION["path"] = $emaPath;
-					$_SESSION["basefn"] = $basefn;
+					$_SESSION["basefn"] = $destDir.$id;
+					$_SESSION["carpeta"]=$id;
                 }
 
 			} else {

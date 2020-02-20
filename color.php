@@ -78,10 +78,10 @@ if (file_exists($emaPath)) //&& filesize($emaPath) > 0)
 		#echo substr($line_array[11], 1)."<br>";
 		
 
-		if ($line_array[8] != '' && !in_array($line_array[1], $def)){
+		if ($line_array[8] != '_' && !in_array($line_array[1], $def)){
 			$h=$h+1;
 			$progema_web=$progema_web."<sup>".$h."</sup>";
-			if($line_array[11]!="[]" && $line_array[11]!=""){
+			if($line_array[11]!="[]" && $line_array[11]!="_"){
 				#echo substr($line_array[11], 1)."<br>";
 				$examples = substr($line_array[11], 1);
 				$char= array("[", "'", "]", "\"");

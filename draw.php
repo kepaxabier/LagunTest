@@ -30,7 +30,7 @@ if (file_exists($emaPath)) //&& filesize($emaPath) > 0)
 		$line_array=explode("\t", $progema_array[$i]);
 		#echo $line_array[10]."<br>";
 
-        if ($line_array[3]=='NOUN'  &&  $line_array[10]!= ""){
+        if ($line_array[3]=='NOUN'  &&  $line_array[10]!= "_"){
 			$ext = end(explode('.', $line_array[10]));
 			#echo $ext."<br>";
 			
