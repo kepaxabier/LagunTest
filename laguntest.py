@@ -178,7 +178,7 @@ class Maiztasuna:
         self.path = path
 
     def load(self):
-        with open(self.path) as csv_file:
+        with open(self.path, encoding='utf-8') as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
             for row in csv_reader:
                 Maiztasuna.freq_list[row[1].strip()] = row[0]
@@ -199,13 +199,52 @@ class Stopwords:
 
     def load(self):
         if self.lang == "english":
-            #Stopwords.stop_words = stopwords.words('english')
-            Stopwords.stop_words = set(line.strip() for line in open('/var/www/html/erraztest/en/stopwords.txt'))
+            # Stopwords.stop_words = stopwords.words('english')
+            # Open the file with read only permit
+            f = open('/var/www/html/erraztest/en/stopwords.txt', encoding='utf-8')
+            # use readline() to read the first line
+            line = f.readline()
+            # use the read line to read further.
+            # If the file is not empty keep reading one line
+            # at a time, till the file is empty
+            while line:
+                # print(line)
+                Stopwords.stop_words.append(line.strip())
+                # use realine() to read next line
+                line = f.readline()
+            f.close()
+            #Stopwords.stop_words = set(line.strip() for line in open('/var/www/html/erraztest/en/stopwords.txt'))
         if self.lang == "spanish":
             # Stopwords.stop_words = stopwords.words('spanish')
-            Stopwords.stop_words = set(line.strip() for line in open('/var/www/html/erraztest/es/stopwords.txt'))
+            # Open the file with read only permit
+            f = open('/var/www/html/erraztest/es/stopwords.txt', encoding='utf-8')
+            # use readline() to read the first line
+            line = f.readline()
+            # use the read line to read further.
+            # If the file is not empty keep reading one line
+            # at a time, till the file is empty
+            while line:
+                # print(line)
+                Stopwords.stop_words.append(line.strip())
+                # use realine() to read next line
+                line = f.readline()
+            f.close()
+            #Stopwords.stop_words = set(line.strip() for line in open('/var/www/html/erraztest/es/stopwords.txt'))
         if self.lang == "basque":
-            Stopwords.stop_words = set(line.strip() for line in open('/var/www/html/erraztest/eu/stopwords.txt'))
+            # Open the file with read only permit
+            f = open('/var/www/html/erraztest/eu/stopwords.txt', encoding='utf-8')
+            # use readline() to read the first line
+            line = f.readline()
+            # use the read line to read further.
+            # If the file is not empty keep reading one line
+            # at a time, till the file is empty
+            while line:
+                # print(line)
+                Stopwords.stop_words.append(line.strip())
+                # use realine() to read next line
+                line = f.readline()
+            f.close()
+            #Stopwords.stop_words = set(line.strip() for line in open('/var/www/html/erraztest/eu/stopwords.txt'))
             #line.decode('utf-8').strip()
 
 
@@ -975,7 +1014,7 @@ class Main(object):
         text = self.extract_text_from_file(input)
 
         #####WordCloud
-        wordcloud = WordCloud(relative_scaling=1.0, stopwords=Stopwords.stop_words).generate(text)
+        wordcloud = WordCloud(relative_scaling=1.0, stopwords=set(Stopwords.stop_words)).generate(text)
         # Finally, use matplotlib to render the word cloud:
         # plot_wordcloud(wordcloud)
         wordcloudfilename = input + ".png"
