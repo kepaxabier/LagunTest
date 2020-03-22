@@ -583,12 +583,19 @@ class Document:
                                 synset_ids = wn.synsets(w.lemma)
                             if (self.language == 'basque'):
                                 synset_ids = wn.synsets(w.lemma, lang='eus')
+                            if (self.language == 'spanish'):
+                                synset_ids= wn.synsets(w.lemma, lang='spa')
+                                #print(w.lemma)
+                                #print("syssets_ids:")
+                                #print(synset_ids)
                             #Si UKB o PyWsd
                             #if pywsd==True:
                                 #synset_desambiguado=sentencewsd(contexts,w.text)
                             #else:
                             #UKB
                             offset_desambiguado=s.get_ukb_sense(w.lemma)
+                            #print("offset desambiguado:")
+                            #print(offset_desambiguado)
                             if offset_desambiguado=='':
                                 synset_desambiguado=None
                             else:
@@ -597,6 +604,8 @@ class Document:
                                     synsetoffset=synset.offset()
                                     if str(synsetoffset) in offset_desambiguado:
                                         synset_desambiguado=synset
+                                        #print("obtener el synset para ese offset devuelto por UKB")
+                                        #print(synset_desambiguado)
                             #Si desambigua
                             if synset_desambiguado is not None:
                                 pass
@@ -653,6 +662,19 @@ class Document:
                                             synonyms.remove(w.lemma.lower())
                                         except:
                                             pass
+                                if (self.language =='spanish'):
+                                    # sinonimos
+                                    for l in synset_desambiguado.lemma_names('spa'):
+                                        synonyms.append(l.lower())
+                                        try:
+                                            synonyms.remove(w.text.lower())
+                                        except:
+                                            pass
+                                        try:
+                                            synonyms.remove(w.lemma.lower())
+                                        except:
+                                            pass
+
                                 #url imagen
                                 if w.upos=='NOUN' or w.upos=='PROPN':
                                     url=imagenet_offset2url(offset)
@@ -671,6 +693,7 @@ class Document:
                                     sinonimoak=sinonimoak.replace('\t', '')
                                 else:
                                     sinonimoak="_"
+                                #print(sinonimoak)
                                 if definition=='':
                                     definition="_"
                                 else:
@@ -764,6 +787,7 @@ class Sentence:
         contextname = str(uuid.uuid4())
         # contextname="context.txt"
         context = open(contextname, "w")
+        print(contextname)
         ukboutname = str(uuid.uuid4())
         # ukboutname="ukbout.txt"
         cadena = ""
@@ -793,7 +817,9 @@ class Sentence:
             # os.system("/home/kepa/ukb-master/src/ukb_wsd --client --port 10001 "+ str(contextname) + " > "+str(ukboutname))
             os.system("/var/www/html/erraztest/ukb-master/src/ukb_wsd --client --port 10001 " + str(
                 contextname) + " > " + str(ukboutname))
-
+        if language == 'spanish':
+            os.system(
+                "/var/www/html/erraztest/ukb-master/src/ukb_wsd --client --port 10002 " + str(contextname) + " > " + str(ukboutname))
         # os.system("/home/kepa/ukb-master/src/ukb_wsd --client --port 10000 /media/datos/Dropbox/ikerkuntza/metrix-env/LagunTest/context.txt > /media/datos/Dropbox/ikerkuntza/metrix-env/LagunTest/ukbout.txt")
         ukbout = open(ukboutname, "r")
         lerro = ukbout.readline()
@@ -810,8 +836,8 @@ class Sentence:
             lerro = ukbout.readline()
             # print(lerro)
         ukbout.close()
-        os.system("rm " + str(ukboutname))
-        os.system("rm " + str(contextname))
+        #os.system("rm " + str(ukboutname))
+        #os.system("rm " + str(contextname))
 
 
 class Word:
@@ -992,13 +1018,13 @@ class Main(object):
             eusdef.load()
             # eusdef.print()
 
-        # directory='/home/kepa'
+
         directory = '/var/www'
         model = "stanford"
 
         # Carga del modelo Stanford/NLPCube
         cargador = NLPCharger(language, model, directory, difficult_level)
-        #cargador.download_model()
+        cargador.download_model()
         cargador.load_model()
         # Carga StopWords
         stopw = Stopwords(language)
