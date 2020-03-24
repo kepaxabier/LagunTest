@@ -29,29 +29,44 @@ def set_is_empty(some_set):
 import codecs
 
 
-class EusWN_definizioak():
+class WN_definizioak():
     defi = {}
 
     def __init__(self, language):
         self.lang = language
 
     def print(self):
-        print(EusWN_definizioak.defi)
+        print(WN_definizioak.defi)
 
     def load(self):
         if self.lang == "basque":
-            EusWN_definizioak.defi = {}
+            WN_definizioak.defi = {}
             with codecs.open('/var/www/html/erraztest/eu/EusWN_definizioak.tsv', encoding='utf-8') as fe:
                 next(fe)
                 for line in fe:
                     (hitza, synseta, definizioa) = line.split("\t")
-                    EusWN_definizioak.defi[synseta] = definizioa
+                    WN_definizioak.defi[synseta] = definizioa
+        if self.lang == "spanish":
+            WN_definizioak.defi={}
+            with codecs.open('/var/www/html/erraztest/es/wei_spa-30_synset_9.csv', encoding='utf-8') as fe:
+                next(fe)
+                for line in fe:
+                    (synseta,pos,number1,gidoi1,gidoi2,number2,definizioa,number3,number4)=line.split(",")
+                    WN_definizioak.defi[synseta] = definizioa
+
 
     def definition_eu(offset):
         # osatu synseta:eus-30-80000745-n
         synseta = "eus-30-" + str(offset).zfill(8) + "-n"
-        if EusWN_definizioak.defi.get(synseta):
-            return (EusWN_definizioak.defi.get(synseta))
+        if WN_definizioak.defi.get(synseta):
+            return (WN_definizioak.defi.get(synseta))
+        else:
+            return ""
+    def definition_es(offset):
+        # osatu synseta:eus-30-80000745-n
+        synseta = "spa-30-" + str(offset).zfill(8) + "-n"
+        if WN_definizioak.defi.get(synseta):
+            return (WN_definizioak.defi.get(synseta))
         else:
             return ""
 
@@ -650,7 +665,7 @@ class Document:
                                         except:
                                             pass
                                 if (self.language == 'basque'):
-                                    definition = EusWN_definizioak.definition_eu(offset)
+                                    definition = WN_definizioak.definition_eu(offset)
                                     #sinonimos
                                     for l in synset_desambiguado.lemma_names('eus'):
                                         synonyms.append(l.lower())
@@ -663,6 +678,7 @@ class Document:
                                         except:
                                             pass
                                 if (self.language =='spanish'):
+                                    definition = WN_definizioak.definition_es(offset)
                                     # sinonimos
                                     for l in synset_desambiguado.lemma_names('spa'):
                                         synonyms.append(l.lower())
@@ -787,7 +803,7 @@ class Sentence:
         contextname = str(uuid.uuid4())
         # contextname="context.txt"
         context = open(contextname, "w")
-        print(contextname)
+        #print(contextname)
         ukboutname = str(uuid.uuid4())
         # ukboutname="ukbout.txt"
         cadena = ""
@@ -1013,10 +1029,10 @@ class Main(object):
         if language == "basque":
             maiztasuna = Maiztasuna("/var/www/html/erraztest/eu/LB2014Maiztasunak_zenbakiakKenduta.csv")
             maiztasuna.load()
-            # Euskarazko definizioak
-            eusdef = EusWN_definizioak(language)
-            eusdef.load()
-            # eusdef.print()
+        if language == "basque" or language == "spanish":
+            WNdef= WN_definizioak(language)
+            WNdef.load()
+            #WNdef.print()
 
 
         directory = '/var/www'
