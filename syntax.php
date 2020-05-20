@@ -34,39 +34,26 @@ if (file_exists($emaPath)) //&& filesize($emaPath) > 0)
 	# Devuelve un array de string, siendo cada uno un substring del parámetro string formado por la división realizada por los delimitadores indicados en el parámetro delimiter. 
 	$progema_array = explode("\n", $progema);
 	for ($i=0; $i < (count($progema_array)); $i++) {
-		#Por cada linea: delimitador de columna ","
-		#$line_array=explode(",", $progema_array[$i]);  
-		# mixed preg_replace ( mixed $pattern , mixed $replacement , mixed $subject [, int $limit = -1 [, int &$count ]] )
-		#Busca en subject coincidencias de pattern y las reemplaza con replacement.  
-		#$lerroa = preg_replace('/^[0-9]+\,/', '', $progema_array[$i]);
-		#Si es la primera línea
-		#if ($line_array[0] ==1) 
-		    #$progema_web=$progema_web."<b>".$progema_array[i]."</b><br>";}
-		#else 
-		#parrafoka
-		#kepa
 		$line_array=explode("\t", $progema_array[$i]);
 
 		if ($line_array[0] ==1) {
 			$numberofsentences=$numberofsentences+1;
 		}
-		#fin de kepa o:
-		#$progema_web=$progema_web.$progema_array[$i]."<br>";	
-    } #for  
+		
+    	}  
     
-    for ($j=1; $j < $numberofsentences+1; $j++) {
-		#$file="tmp/".$basefn.".png";
+    	for ($j=1; $j < $numberofsentences+1; $j++) {
 	    	$ficheros=$carpeta."/".$j.".png";
-                #echo "<p> ".$ficheros."</p>";
-		#echo '<img src="'.$ficheros.'">'; #width="600" height="400">';
-		#echo "<hr>";
-		$parsing=$parsing.'<img src="'.$ficheros.'"/><hr>';
+		#$parsing=$parsing.'<img src="'.$ficheros.'"/><hr>';
+		echo "<div class='gallery'>";
+		echo "<a target='_blank'>";
+		echo "<img src='".$ficheros."'";
+		echo "</a>";
+		echo "</div>"; 
 	}
-	
-
-        #echo "<p>".$parsing."</p>";
-	echo "<div class='image' id='emadiv' style='text-align: center;'>".$parsing."<br>".$depreldescription."</div>";
-                    
+	echo "<small>".$depreldescription."</small>";
+        #echo "<p>".$parsing."</p>";a
+	#echo "<div class='image' id='emadiv' style='text-align: center;'>".$parsing."<br>".$depreldescription."</div>";                    
 }
 
 

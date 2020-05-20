@@ -37,6 +37,7 @@ require "header.php"
 				<select name="language"class="select-item">
 					<option value="english">English</option>
 					<option value="basque">Euskera</option>
+					<option value="spanish">Castellano</option>
 				</select>
 			</div>
 

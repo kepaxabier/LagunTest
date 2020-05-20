@@ -5,50 +5,31 @@ require "header.php"
 <html>
 
 <body>
-
-<nav class="title-aux">
-  <ol>  
-      <li class="title-aux"><a href="">Synomym List<br><small>(proper noun:pink, pronoun:darkgreen, noun:lightgreen, adjective:darkblue, partitive:yellow, verb:red and adverb:orange)</small></a></li>
-  </ol>
-</nav>
+	<nav class="title-aux">
+		<ol><li class="title-aux"><a href="">Synonym List<br></a></li></ol>
+	</nav> 
+	<nav class="text-aux">                                                                                                                             <div id="pink" class="box"></div><span class="explanation">Proper Noun</span>                                                              <div id="dark-green" class="box"></div><span class="explanation">Pronoun</span>                                                            <div id="light-green" class="box"></div><span class="explanation">Noun</span>                                                              <div id="dark-blue" class="box"></div><span class="explanation">Adjective</span>                                                           <div id="yellow" class="box"></div><span class="explanation">Partitive</span>                                                              <div id="red" class="box"></div><span class="explanation">Verb</span>                                                                      <div id="orange" class="box"></div><span class="explanation">Adverb</span>                                                         </nav> 
 
 <?php
-session_start();
-$emaPath = $_SESSION["path"];
+	session_start();
+	$emaPath = $_SESSION["path"];
 
+	if (file_exists($emaPath)) //&& filesize($emaPath) > 0)  
+	{
 
-if (file_exists($emaPath)) //&& filesize($emaPath) > 0)  
-{
-						#file_get_contents — Transmite un fichero completo a una cadena
-	#chmod ($fn,0644);
 	$progema = file_get_contents($emaPath);
-	#echo "<hr>";
-	#echo "<h3 style='text-align: center;'>Synomym list of rare words and Colouring words (proper noun:pink, pronoun:darkgreen, noun:lightgreen, adjective:darkblue, partitive:yellow, verb:red and adverd:orange) </h3>";          
-	#$progema_web="<hr><h3 style='text-align: center;'>Synomym list of rare words and Colouring words (proper noun:pink, pronoun:darkgreen, noun:lightgreen, adjective:darkblue, partitive:yellow, verb:red and adverd:orange) </h3>";
 	$synomy="<br>";
 	$numberofsentences=0;
 	$h=0;
-	# array explode ( string $delimiter , string $string [, int $limit = PHP_INT_MAX ] )
-	# Devuelve un array de string, siendo cada uno un substring del parámetro string formado por la división realizada por los delimitadores indicados en el parámetro delimiter. 
 	$progema_array = explode("\n", $progema);
 
 	for ($i=0; $i < (count($progema_array)); $i++) {
-		#Por cada linea: delimitador de columna ","
-		#$line_array=explode(",", $progema_array[$i]);  
-		# mixed preg_replace ( mixed $pattern , mixed $replacement , mixed $subject [, int $limit = -1 [, int &$count ]] )
-		#Busca en subject coincidencias de pattern y las reemplaza con replacement.  
-		#$lerroa = preg_replace('/^[0-9]+\,/', '', $progema_array[$i]);
-		#Si es la primera línea
-		#if ($line_array[0] ==1) 
-		    #$progema_web=$progema_web."<b>".$progema_array[i]."</b><br>";}
-		#else 
-		#parrafoka
-		#kepa
+	
 		$line_array=explode("\t", $progema_array[$i]);
 
 
 		if ($line_array[0] ==1) {
-			$progema_web=$progema_web."<br>"; 
+			$progema_web=$progema_web; 
 			$numberofsentences=$numberofsentences+1;
 		} else{
 			$progema_web=$progema_web."&nbsp;&nbsp";  
@@ -86,18 +67,17 @@ if (file_exists($emaPath)) //&& filesize($emaPath) > 0)
 			$palabra = explode(":", $line_array[9]);
 			$char= array("_", "{", "}", "'");
 			$synomy = str_replace($char, " ", $palabra[1]);
-			$synomys=$synomys.$h." ".$synomy."<br>"; 
-
-			
-    	} 
+			$synomys=$synomys.$h."-> ".$synomy."<br>"; 
+		} 
     
     
 		#fin de kepa o:
 		#$progema_web=$progema_web.$progema_array[$i]."<br>";	
 	} #for   
-	echo "<div class='content' id='emadiv' style='text-align: justify;'>".$progema_web."<br><small>".$synomys."</small></div>";
-                    
-}
+	#echo "<div class='box' id='emadiv' style='text-align: justify;'>".$progema_web."<br><small>".$synomys."</small></div>";
+	echo "<div class='box-text'>".$progema_web."</div>";
+	echo "<div class='box-definitions'>".$synomys."</div>";
+	}
 
 ?>
 

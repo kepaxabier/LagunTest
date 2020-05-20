@@ -261,7 +261,7 @@ font-size: 18px;
 /***********------------------ LEVEL + LANGUAGE OPTION ------------------***********/
 .custom-select{
   display:inline-block;
-  align-items: center;
+  align-items:custom center;
   color: #FBFBFB;
   position: relative;
   left: 50%;
@@ -297,7 +297,7 @@ font-size: 18px;
 	border-color: #FBFBFB;
 	box-shadow: 0 0 1px 3px rgba(251, 251, 251, .7);
 	box-shadow: 0 0 0 3px -moz-mac-focusring;
-	color: #222;
+	color: #FBFBFB;
 	outline: none;
 }
 .select-item option {
@@ -474,14 +474,146 @@ z-index: 1;
 }
 /***********---------------------------------------------***********/
 
+/***********----------------TEXTO AUXILIAR---------------***********/
 
+.text-aux {
+  margin: 15px;
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 50px;
+  }
+  
+  .text-aux  > ol {
+  list-style: none;
+  margin: 15px 0;
+  padding: 0;  
+  }
+  
+  .text-aux > ol > li {
+  color: #FBFBFB;
+  position: relative;
+  transition: 0.5s;
+  margin:10px;
+  }
+
+  /***********---------------------------------------------***********/
+
+  /***********----------------CUADRADOS COLORES---------------***********/
+  .box{
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .explanation{
+    margin-left: 5px;
+    vertical-align: middle;
+    color: white;
+    margin-right: 20px;
+  }
+
+  #pink{
+    background-color: pink;
+  }
+
+  #dark-green{
+    background-color: darkgreen;
+  }
+
+  #light-green{
+    background-color: lightgreen;
+  }
+
+  #dark-blue{
+    background-color: darkblue;
+  }
+
+  #yellow{
+    background-color: yellow;
+  }
+
+  #red{
+    background-color: red;
+  }
+
+  #orange{
+    background-color: orange;
+  }
+
+
+  /***********---------------------------------------------***********/
+/***********-------------------DEFINICIONES & SINONIMOS---------------***********/
+  .box-text{
+  	vertical-align: middle;
+	margin-left: 20%;
+	margin-right: 20%;
+	color: #FBFBFB;
+	text-align:justify;
+	overflow: auto;
+	display: block;
+	min-height: 100px;
+	word-break: break-word;
+  }
+
+  .box-definitions{
+	  vertical-align: middle;
+	  margin-left: 15%;
+	  margin-right: 15%;
+	  color: #FBFBFB;
+	  text-align:justify; 
+	  overflow: auto;
+	  display: block;
+	  min-height: 100px;
+	  word-break: break-word; 
+   }
+
+/***************************************************************************************/
 .content{
 font-family: "Varela Round", sans-serif;
-padding: 5%;
-margin-bottom: 5%;
+padding: 15px;
+margin-bottom: 15px;
 color: #FBFBFB;
-text-align: justify;
-font-size: 20px;
+text-align: center;
+font-size: 15px;
+position: relative;
+}
+
+.content > ol{
+  list-style: none;
+  margin-left: 35%;
+}
+
+.content > ol > li{
+  padding: 15px;
+}
+
+/*****************-------------------PHOTO DISPLAY------------------************************/
+
+.gallery {
+ 	margin: 5%;
+     	border: 1px solid #ccc;
+       	float: center;
+       	width: 30%;
+	align-items:center;
+	margin-left:auto;
+	margin-right: auto;
+	display:block;
+}
+
+.gallery:hover {
+	border: 1px solid #777;
+}
+
+.gallery img {
+	width: 100%;
+       	height: auto;
+}
+
+.desc {
+	padding: 10px;
+	text-align: center;
+	color: #FBFBFB;
 }
 
 .image { 
