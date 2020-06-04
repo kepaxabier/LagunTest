@@ -17,14 +17,12 @@ require "header.php"
 		function eraseText() {
 			document.getElementById("inputtext_area").value = "";
 		}
-
 	</script>
 </head>
 
 <body>
   
 		<form id="form" method="post" onsubmit="processing()">
-
 			<!-- Nivel + Idioma -->
 			<div class="custom-select" id="list">
 				Level:
@@ -76,27 +74,33 @@ require "header.php"
 		if (isset($_POST['inputtext'])) {
 			//Crear carpeta aleatoria
 			mkdir($destDir.$id, 0770);
-			//Crear fichero con el texto introducido dentro de la carpeta aleatorio
+
+			//Directorio del fichero a crear
 			$completeTextPath = $destDir.$id."/text.txt";
 
-			// Si lo ha creado vacio
 			if ($completeTextPath) {
-				//abrimos
+				//Crear .txt
 				$f = fopen ($completeTextPath, "w");
+				//Permisos
 				chmod($completeTextPath, 0664);
 
 				if ($f){
-					//escibimos el contenido de la caja en el fichero
+					//Escibimos el contenido de la caja en el .txt
 					fwrite($f,$_POST['inputtext']);
 					fwrite($f,"\n");
-					//cerramos el fichero
 					fclose($f);
+
 					//dos2unix - Convertidor de archivos de texto de formato DOS/Mac a Unix y viceversa
 					exec("/usr/bin/dos2unix ".$completeTextPath);
+
+					//Llamada a laguntest.py
 					$comando=$binPath." text.txt ".$_POST['difficult']." ".$_POST['language']." ".$destDir.$id;
 					exec($comando, $output, $return);
-					
+
+					//Path donde se guardarán los resultados del análisis
 					$emaPath = $completeTextPath.".out.csv";
+
+					//Variables de sesion
 					$_SESSION["path"] = $emaPath;
 					$_SESSION["basefn"] = $destDir.$id;
 					$_SESSION["carpeta"]= $id;

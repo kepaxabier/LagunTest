@@ -32,7 +32,7 @@ require "header.php"
 		$h=0;
 		#Obtain information of each word divided in arrays
 		$progema_array = explode("\n", $progema);
-		#
+		#Array para el control de palabras repetidas
 		$def;
 		
 		for ($i=0; $i < (count($progema_array)); $i++) {

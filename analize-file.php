@@ -82,32 +82,29 @@ require "header.php"
 	if (isset($_POST['submit'])) {
 		//Crear carpeta aleatoria
 		mkdir($destDir.$id, 0770);
-			
-		$inputfile = $_FILES['infile']['name'][0];
-		$inputfilepath =$destDir.$id.'/'.$inputfile;
-		#echo "Nombre fichero introducido: ".$inputfile;
 
 		#Guardar archivo al directorio nuevo
+		$inputfile = $_FILES['infile']['name'][0];
+		$inputfilepath =$destDir.$id.'/'.$inputfile;
 		$moved = move_uploaded_file($_FILES['infile']['tmp_name'][0], $inputfilepath);
-		#if( $moved ) {
-		#	echo "<br> moved";
-		#} else {
-		#	echo "The files could not be loaded. <br>";
-		#}
 		
-		#Cambiar nombre del fichero
+		#Directorio completo donde se guardara el fichero
 		$completeTextPath = $destDir.$id."/text.txt";
 		
 		#Convertir en txt
 		exec($convertionPath." ".$id." ".$inputfile);
-		$content = file_get_contents($completeTextPath);
-		#echo "Content: ".$content."<br>";
 
-		#Analizar
+		//dos2unix - Convertidor de archivos de texto de formato DOS/Mac a Unix y viceversa
 		exec("/usr/bin/dos2unix ".$completeTextPath);
+
+		//Llamada a laguntest.py
 		$comando=$binPath." text.txt ".$_POST['difficult']." ".$_POST['language']." ".$destDir.$id;	
 		exec($comando, $output, $return);
+
+		//Path donde se guardarán los resultados del análisis
 		$emaPath = $completeTextPath.".out.csv";
+
+		//Variables de sesion
 		$_SESSION["path"] = $emaPath;
 		$_SESSION["basefn"] = $destDir.$id;
 		$_SESSION["carpeta"]=$id;

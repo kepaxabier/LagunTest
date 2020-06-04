@@ -21,8 +21,7 @@ require "header.php"
 	session_start();
 	$emaPath = $_SESSION["path"];
 
-	if (file_exists($emaPath)) //&& filesize($emaPath) > 0)  
-	{
+	if (file_exists($emaPath)){
 
 	$progema = file_get_contents($emaPath);
 	$synomy="<br>";
@@ -75,13 +74,8 @@ require "header.php"
 			$char= array("_", "{", "}", "'");
 			$synomy = str_replace($char, " ", $palabra[1]);
 			$synomys=$synomys.$h.") <a style = 'text-transform:uppercase; font-weight: bold;'>".$line_array[1]."</a>: ".$synomy.".<br>"; 
-		} 
-
-    
-		#fin de kepa o:
-		#$progema_web=$progema_web.$progema_array[$i]."<br>";	
-	} #for   
-	#echo "<div class='box' id='emadiv' style='text-align: justify;'>".$progema_web."<br><small>".$synomys."</small></div>";
+		}
+	}
 	echo "<div class='box-text'>".$progema_web."</div>";
 	echo "<div class='box-definitions'>".$synomys."</div>";
 	}
