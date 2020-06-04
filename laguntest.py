@@ -66,7 +66,10 @@ class WN_definizioak():
         # osatu synseta:eus-30-80000745-n
         synseta = "spa-30-" + str(offset).zfill(8) + "-n"
         if WN_definizioak.defi.get(synseta):
-            return (WN_definizioak.defi.get(synseta))
+            if WN_definizioak.defi.get(synseta) == "NULL":
+                return ""
+            else:
+                return (WN_definizioak.defi.get(synseta))
         else:
             return ""
 
@@ -557,8 +560,8 @@ class Document:
         syntaxoutput=input+".syntax.csv"
 
         #Write all the information in the file
-        estfile = open(estadisticaoutput, "w")
-        syntaxfile = open(syntaxoutput, "w")
+        estfile = open(estadisticaoutput, "w",encoding='utf-8')
+        syntaxfile = open(syntaxoutput, "w",encoding='utf-8')
         #Si pywsd=True
         #pywsd=False
         palabras_diferentes = []
@@ -802,7 +805,7 @@ class Sentence:
         # Write all the information in the file
         contextname = str(uuid.uuid4())
         # contextname="context.txt"
-        context = open(contextname, "w")
+        context = open(contextname, "w",encoding='utf-8')
         #print(contextname)
         ukboutname = str(uuid.uuid4())
         # ukboutname="ukbout.txt"
@@ -837,7 +840,7 @@ class Sentence:
             os.system(
                 "/var/www/html/erraztest/ukb-master/src/ukb_wsd --client --port 10002 " + str(contextname) + " > " + str(ukboutname))
         # os.system("/home/kepa/ukb-master/src/ukb_wsd --client --port 10000 /media/datos/Dropbox/ikerkuntza/metrix-env/LagunTest/context.txt > /media/datos/Dropbox/ikerkuntza/metrix-env/LagunTest/ukbout.txt")
-        ukbout = open(ukboutname, "r")
+        ukbout = open(ukboutname, "r",encoding='utf-8')
         lerro = ukbout.readline()
         # print(lerro)
         while lerro:

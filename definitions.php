@@ -39,34 +39,35 @@ require "header.php"
 			$line_array=explode("\t", $progema_array[$i]);
 
 			#TEST
-			#echo "BEGIN";
-			#echo "<br>0: ";
-			#echo  $line_array[0];
-			#echo "<br>1: ";
-			#echo $line_array[1];
-			#echo "<br>2: ";
-			#echo $line_array[2];
-			#echo "<br>3: ";
-			#echo $line_array[3];
-			#echo "<br>4: ";
-			#echo $line_array[4];
-			#echo "<br>5: ";
-			#echo $line_array[5];
-			#echo "<br>6: ";
-			#echo $line_array[6];
-			#echo "<br>7: ";
-			#echo $line_array[7];
-			#echo "<br>8: ";
-			#echo $line_array[8];
-			#echo "<br>9: ";
-			#echo $line_array[9];
-			#echo "<br>10: ";
-			#echo $line_array[10];
-			#echo "<br>11: ";
-			#echo $line_array[11];
-			#echo "<br>def: ";
-			#echo $def[$i-1];
-			#echo "<br>";
+			/**echo "BEGIN";
+			echo "<br>0: ";
+			echo  $line_array[0];
+			echo "<br>1: ";
+			echo $line_array[1];
+			echo "<br>2: ";
+			echo $line_array[2];
+			echo "<br>3: ";
+			echo $line_array[3];
+			echo "<br>4: ";
+			echo $line_array[4];
+			echo "<br>5: ";
+			echo $line_array[5];
+			echo "<br>6: ";
+			echo $line_array[6];
+			echo "<br>7: ";
+			echo $line_array[7];
+			echo "<br>8: ";
+			echo $line_array[8];
+			echo "<br>9: ";
+			echo $line_array[9];
+			echo "<br>10: ";
+			echo $line_array[10];
+			echo "<br>11: ";
+			echo $line_array[11];
+			echo "<br>def: ";
+			echo $def[$i-1];
+			echo "<br>";**/
+			
 
 			#line_array[0] -> Position of the word in the sentence
 			if ($line_array[0] == 1) { #if first word of sentence
@@ -110,16 +111,21 @@ require "header.php"
 					$char= array("[", "'", "]", "\"");
 					$examples_format = str_replace($char, "", $examples);
 					$examples_format = str_replace(",", ". ", $examples_format);
-					$definitions=$definitions.$h."-> ".$line_array[8].". Examples: ".$examples_format."<br>"; 
+					$definitions=$definitions.$h.") <a style = 'text-transform:uppercase; font-weight: bold;'>".$line_array[1]."</a>: ".ucfirst($line_array[8]).". <a style='font-style: italic;'>Examples: ".ucfirst($examples_format).".</a><br>"; 
 				}else{
-					$definitions=$definitions.$h."-> ".$line_array[8].".<br>"; 
+					$definitions=$definitions.$h.") <a style = 'text-transform:uppercase; font-weight: bold;'>".$line_array[1]."</a>: ".ucfirst($line_array[8]).".<br>"; 
 				}
 			}
 			$def[$i] = $line_array[1];
-		}  
+		}    
 		
 		echo "<div class='box-text'>".$progema_web."</div>"; 
-		echo "<div class='box-definitions'>".$definitions."</div>";      		
+		echo "<div class='box-definitions'>".$definitions."</div>";      	
+		echo "<br>";
+		echo "<br>";      		
+		echo "<br>";      		
+
+	
 }
 ?>
 </body>

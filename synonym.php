@@ -8,8 +8,15 @@ require "header.php"
 	<nav class="title-aux">
 		<ol><li class="title-aux"><a href="">Synonym List<br></a></li></ol>
 	</nav> 
-	<nav class="text-aux">                                                                                                                             <div id="pink" class="box"></div><span class="explanation">Proper Noun</span>                                                              <div id="dark-green" class="box"></div><span class="explanation">Pronoun</span>                                                            <div id="light-green" class="box"></div><span class="explanation">Noun</span>                                                              <div id="dark-blue" class="box"></div><span class="explanation">Adjective</span>                                                           <div id="yellow" class="box"></div><span class="explanation">Partitive</span>                                                              <div id="red" class="box"></div><span class="explanation">Verb</span>                                                                      <div id="orange" class="box"></div><span class="explanation">Adverb</span>                                                         </nav> 
-
+	<nav class="text-aux">
+		<div id="pink" class="box"></div><span class="explanation">Proper Noun</span>
+		<div id="dark-green" class="box"></div><span class="explanation">Pronoun</span>
+		<div id="light-green" class="box"></div><span class="explanation">Noun</span>
+		<div id="dark-blue" class="box"></div><span class="explanation">Adjective</span>
+		<div id="yellow" class="box"></div><span class="explanation">Partitive</span>
+		<div id="red" class="box"></div><span class="explanation">Verb</span>
+		<div id="orange" class="box"></div><span class="explanation">Adverb</span>
+	</nav>
 <?php
 	session_start();
 	$emaPath = $_SESSION["path"];
@@ -67,9 +74,9 @@ require "header.php"
 			$palabra = explode(":", $line_array[9]);
 			$char= array("_", "{", "}", "'");
 			$synomy = str_replace($char, " ", $palabra[1]);
-			$synomys=$synomys.$h."-> ".$synomy."<br>"; 
+			$synomys=$synomys.$h.") <a style = 'text-transform:uppercase; font-weight: bold;'>".$line_array[1]."</a>: ".$synomy.".<br>"; 
 		} 
-    
+
     
 		#fin de kepa o:
 		#$progema_web=$progema_web.$progema_array[$i]."<br>";	
