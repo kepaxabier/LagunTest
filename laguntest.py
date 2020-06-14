@@ -738,8 +738,8 @@ class Document:
                                 #print("Ningun synset!!!")
                                 pass
                         #print(str(w.index)+"\t"+w.text+"\t"+w.lemma+"\t"+w.upos+"\t"+w.xpos+"\t"+w.feats+"\t"+str(w.governor)+"\t"+str(w.dependency_relation[:4])+"\t"+definition+"\t"+sinonimoak+"\t"+url+"\t"+examples+"\t_")
-                        syntaxfile.write("%s" % str(w.index)+"\t"+w.text+"\t"+w.lemma+"\t"+w.upos+"\t"+w.xpos+"\t"+w.feats+"\t"+str(w.governor)+"\t"+str(w.dependency_relation[:4])+"\t_\t_")
-                        estfile.write("%s" % str(w.index)+"\t"+w.text+"\t"+w.lemma+"\t"+w.upos+"\t"+w.xpos+"\t"+w.feats+"\t"+str(w.governor)+"\t"+str(w.dependency_relation[:4])+"\t"+definition+"\t"+sinonimoak+"\t"+url+"\t"+examples+"\t_")
+                        syntaxfile.write("%s" % str(w.index)+"\t"+w.text+"\t"+w.lemma+"\t"+w.upos+"\t"+w.xpos+"\t"+w.feats+"\t"+str(w.governor)+"\t"+str(w.get_dependentzia(self.language))+"\t_\t_")
+                        estfile.write("%s" % str(w.index)+"\t"+w.text+"\t"+w.lemma+"\t"+w.upos+"\t"+w.xpos+"\t"+w.feats+"\t"+str(w.governor)+"\t"+str(w.get_dependentzia(self.language))+"\t"+definition+"\t"+sinonimoak+"\t"+url+"\t"+examples+"\t_")
                         syntaxfile.write('\n')
                         estfile.write('\n')
                 syntaxfile.write('\n')
@@ -984,6 +984,95 @@ class Word:
                 self.wordfrequency = 0
         return self.wordfrequency
 
+    
+    def get_dependentzia(self, language):
+        dep = "_"
+#acl(adjectival clause)	MOD	Modifier	Aditzlaguna	Complemento circustancial
+#amod(adjectival modifier)	MOD	Modifier	Aditzlaguna	Complemento circustancial
+#advcl(adverbial clause modifier)	MOD	Modifier	Aditzlaguna	Complemento circustancial
+#conj(conjunct)	lot			
+#advmod(adverbial modifier)	MOD	Modifier	Aditzlaguna	Complemento circustancial
+#appos(appositional modifier)	MOD	Modifier	Aditzlaguna	Complemento circustancial
+#aux(auxiliary verb)				
+#case(case marking)				
+#ccomp(clausal complement)	A	Core argument (other)	Bestelako osagarria	otro complemento
+#clf(classifier)				
+#compound(compound)				
+#cc(coordinating conjunction)				
+#cop(copula)	C	Copula verb (‘to be’) 	'Izan’ edo ‘egon’ aditza	Verbo copulativo (‘ser’ o ‘estar’)
+#csubj(clausal subject)	S	Subject	Subjektua	Sujecto
+#det(determiner)				
+#discourse(discourse element)				
+#dislocated(dislocated elements)				
+#expl(expletive)				
+#fixed(fixed multiword expression)				
+#flat(flat multiword expression)				
+#iobj(indirect object)	IO	Indirect object	Zehar osagarria	Complemento indirecto
+#list(list)				
+#nmod(nominal modifier)	MOD	Modifier	Aditzlaguna	Complemento circustancial
+#nsubj(nominal subject)	S	Subject	Subjektua	Sujecto
+#nummod(numeric modifier)	MOD	Modifier	Aditzlaguna	Complemento circustancial
+#mark(marker)				
+#obj(object)	O	Object	Osagarri zuzena	Complemento directo
+#obl(oblique nominal)				
+#orphan(orphan)				
+#parataxis(parataxis)				
+#punct(punctuation)				
+#root(root)	V	Main verb	Aditz nagusia	Verbo principal
+#vocative(vocative)	VOC	Vocative	Bokatiboa	Vocativo
+#xcomp(open clausal complement)	A	Core argument (other)	Bestelako osagarria	otro complemento
+        if language == "spanish" or language == "english" or language == "basque":
+            if self.dependency_relation == "acl" or self.dependency_relation == "amod" or self.dependency_relation == "advcl" or self.dependency_relation == "advmod" or self.dependency_relation == "appos" or self.dependency_relation == "nmod" or self.dependency_relation == "nummod":
+                dep="m"
+            if self.dependency_relation == "csubj" or self.dependency_relation == "nsubj":
+                dep="s"
+            if self.dependency_relation == "punct":
+                dep="p"
+            if self.dependency_relation == "root":
+                dep="v"
+            if self.dependency_relation == "obj":
+                dep="o"
+            if self.dependency_relation == "iobj":
+                dep="io"
+            if self.dependency_relation == "conj" or  self.dependency_relation == "cc":
+                dep="lo"
+            if self.dependency_relation == "aux":
+                dep="au"
+            if self.dependency_relation == "case":
+                dep="ca"
+            if self.dependency_relation == "ccomp" or self.dependency_relation == "xcomp":
+                dep="a"
+            if self.dependency_relation == "cop":
+                dep="c"            
+            if self.dependency_relation == "det":
+                dep="de"
+            if self.dependency_relation == "vocative":
+                dep="vo"
+            if self.dependency_relation == "compound" or self.dependency_relation == "fixed" or self.dependency_relation == "flat":
+                dep="mw"
+            if self.dependency_relation == "discourse":
+                dep="_"
+            if self.dependency_relation == "dislocated":
+                dep="_"
+            if self.dependency_relation == "expl":
+                dep="_"
+            if self.dependency_relation == "list":
+                dep="_"
+            if self.dependency_relation == "mark":
+                dep="_"
+            if self.dependency_relation == "orphan":
+                dep="_"
+            if self.dependency_relation == "parataxis":
+                dep="_"
+            if self.dependency_relation == "clf":
+                dep="_"
+           
+        #elif language == "english":
+        #elif language == "basque":
+        #else:
+        return dep
+
+
 
 class Main(object):
     __instance = None
@@ -1073,5 +1162,6 @@ class Main(object):
 
 main = Main()
 main.start()
+
 
 

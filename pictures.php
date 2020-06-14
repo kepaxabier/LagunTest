@@ -15,11 +15,11 @@ require "header.php"
 
     <?php
     session_start();
-    $emaPath = $_SESSION["path"];
+    $results = $_SESSION["results"];
 
-    if (file_exists($emaPath)){
+    if (file_exists($results)){
         //Contenido del analisis
-        $progema = file_get_contents($emaPath);
+        $progema = file_get_contents($results);
         $progema_array = explode("\n", $progema);
 
         //Para cada palabra

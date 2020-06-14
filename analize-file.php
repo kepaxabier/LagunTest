@@ -13,13 +13,13 @@ require "header.php"
         function checkextension() {
             var file = document.querySelector("#infile");
             if (document.getElementById("infile").files.length == 0) {
-                alert("You have to upload at least one file!");
+                alert("You have to upload one file!");
                 return false;
             }  else {
                 var index = 0;
                 while (index < document.getElementById("infile").files.length){
                     if (/\.(txt|docx|odt|doc)$/i.test(file.files[index].name) === false ) {
-                        alert("Invalid format. Only .txt, .odt or .docx files allowed.");
+                        alert("Invalid format. Only .txt, .odt, .doc or .docx files allowed.");
                         return false;
                     }
                     index++;
@@ -84,30 +84,34 @@ require "header.php"
 		mkdir($destDir.$id, 0770);
 
 		#Guardar archivo al directorio nuevo
-		$inputfile = $_FILES['infile']['name'][0];
-		$inputfilepath =$destDir.$id.'/'.$inputfile;
-		$moved = move_uploaded_file($_FILES['infile']['tmp_name'][0], $inputfilepath);
+		if($_FILES['infile']['name'][1]){
+			echo'<script type="text/javascript">
+    			alert("Only one file allowed.");
+    			</script>';
+		}else{
+			$inputfile = $_FILES['infile']['name'][0];
+			$inputfilepath =$destDir.$id.'/'.$inputfile;
+			$moved = move_uploaded_file($_FILES['infile']['tmp_name'][0], $inputfilepath);
+			
+			#Directorio completo donde se guardara el fichero
+			$completeTextPath = $destDir.$id."/".$inputfile;
+			
+			//dos2unix - Convertidor de archivos de texto de formato DOS/Mac a Unix y viceversa
+			exec("/usr/bin/dos2unix ".$completeTextPath);
+	
+			//Llamada a laguntest.py
+			$comando=$binPath." ".$inputfile." ".$_POST['difficult']." ".$_POST['language']." ".$destDir.$id;
+			exec($comando, $output, $return);
+
+			//Variables de sesion
+			$_SESSION["results"] = $completeTextPath.".out.csv";
+			$_SESSION["syntax"] = $completeTextPath.".syntax.csv";
+			$_SESSION["directory"] = $id;
+			$_SESSION["baseDirectory"] = $destDir.$id;
+			$_SESSION["language"] = $_POST['language'];
+			$_SESSION["file"] = $inputfile;
+		}
 		
-		#Directorio completo donde se guardara el fichero
-		$completeTextPath = $destDir.$id."/text.txt";
-		
-		#Convertir en txt
-		exec($convertionPath." ".$id." ".$inputfile);
-
-		//dos2unix - Convertidor de archivos de texto de formato DOS/Mac a Unix y viceversa
-		exec("/usr/bin/dos2unix ".$completeTextPath);
-
-		//Llamada a laguntest.py
-		$comando=$binPath." text.txt ".$_POST['difficult']." ".$_POST['language']." ".$destDir.$id;	
-		exec($comando, $output, $return);
-
-		//Path donde se guardarán los resultados del análisis
-		$emaPath = $completeTextPath.".out.csv";
-
-		//Variables de sesion
-		$_SESSION["path"] = $emaPath;
-		$_SESSION["basefn"] = $destDir.$id;
-		$_SESSION["carpeta"]=$id;
 	}
 	?>
 	</form>

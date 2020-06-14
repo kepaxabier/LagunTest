@@ -11,7 +11,7 @@ require "header.php"
 			document.getElementById('buttonSubmit').style.display = 'none';
 			document.getElementById('clearButton').style.display = 'none';
 			document.getElementById('inputtext_area').style.display = 'none';
-			document.getElementById('list').style.display = 'none';
+			document.getElementById('list').style.display = 'none';	
 		}
 
 		function eraseText() {
@@ -58,7 +58,7 @@ require "header.php"
 			<!-- Submit & Clear Buttons -->			
 			<nav class="boton-box">
 				<ol>
-				<li><button type="submit" id="buttonSubmit" value="Submit">Submit</button></li>
+				<li><button type="submit" id="buttonSubmit" value="Submit">Analyze</button></li>
 				<li><button type="button" id="clearButton" value="Clear" onclick="javascript:eraseText();">Clear</button></li>
 				</ol>
 			
@@ -72,42 +72,51 @@ require "header.php"
 		$id = uniqid(true);
 		// Execute this code if the submit button is pressed.
 		if (isset($_POST['inputtext'])) {
-			//Crear carpeta aleatoria
-			mkdir($destDir.$id, 0770);
 
-			//Directorio del fichero a crear
-			$completeTextPath = $destDir.$id."/text.txt";
+			#Si no hay texto
+			if($_POST['inputtext']==""){
+				echo'<script type="text/javascript">
+    			alert("Text area empty, please type your text.");
+    			</script>';
+			}else{
 
-			if ($completeTextPath) {
-				//Crear .txt
-				$f = fopen ($completeTextPath, "w");
-				//Permisos
-				chmod($completeTextPath, 0664);
+				//Crear carpeta aleatoria
+				mkdir($destDir.$id, 0770);
 
-				if ($f){
-					//Escibimos el contenido de la caja en el .txt
-					fwrite($f,$_POST['inputtext']);
-					fwrite($f,"\n");
-					fclose($f);
+				//Directorio del fichero a crear
+				$completeTextPath = $destDir.$id."/text.txt";
 
-					//dos2unix - Convertidor de archivos de texto de formato DOS/Mac a Unix y viceversa
-					exec("/usr/bin/dos2unix ".$completeTextPath);
+				if ($completeTextPath) {
+					//Crear .txt
+					$f = fopen ($completeTextPath, "w");
+					//Permisos
+					chmod($completeTextPath, 0664);
 
-					//Llamada a laguntest.py
-					$comando=$binPath." text.txt ".$_POST['difficult']." ".$_POST['language']." ".$destDir.$id;
-					exec($comando, $output, $return);
+					if ($f){
+						//Escibimos el contenido de la caja en el .txt
+						fwrite($f,$_POST['inputtext']);
+						fwrite($f,"\n");
+						fclose($f);
 
-					//Path donde se guardarán los resultados del análisis
-					$emaPath = $completeTextPath.".out.csv";
+						//dos2unix - Convertidor de archivos de texto de formato DOS/Mac a Unix y viceversa
+						exec("/usr/bin/dos2unix ".$completeTextPath);
 
-					//Variables de sesion
-					$_SESSION["path"] = $emaPath;
-					$_SESSION["basefn"] = $destDir.$id;
-					$_SESSION["carpeta"]= $id;
-                }
+						//Llamada a laguntest.py
+						$comando=$binPath." text.txt ".$_POST['difficult']." ".$_POST['language']." ".$destDir.$id;
+						exec($comando, $output, $return);
 
-			} else {
-				echo("<p>Erroreren bat egon da fitxategi tenporala sortzean.</p>");
+						//Variables de sesion
+						$_SESSION["results"] = $completeTextPath.".out.csv";
+						$_SESSION["syntax"] = $completeTextPath.".syntax.csv";
+						$_SESSION["directory"] = $id;
+						$_SESSION["baseDirectory"] = $destDir.$id;
+						$_SESSION["language"] = $_POST['language'];
+						$_SESSION["file"] = "text.txt";
+					}
+
+				} else {
+					echo("<p>Erroreren bat egon da fitxategi tenporala sortzean.</p>");
+				}
 			}
 		}
     ?>

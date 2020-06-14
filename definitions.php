@@ -18,12 +18,12 @@ require "header.php"
 	</nav>
 	<?php
 	session_start();
-	$emaPath = $_SESSION["path"];
+	$results = $_SESSION["results"];
 
-	if (file_exists($emaPath)) //&& filesize($emaPath) > 0)  
+	if (file_exists($results)) //&& filesize($emaPath) > 0)  
 	{
 		#Obtain text analized information
-		$progema = file_get_contents($emaPath);
+		$progema = file_get_contents($results);
 		#Save all definitions
 		$definitions="<br>";
 		#Number of sentences
@@ -37,9 +37,10 @@ require "header.php"
 		
 		for ($i=0; $i < (count($progema_array)); $i++) {
 			$line_array=explode("\t", $progema_array[$i]);
-
+			
+			/*
 			#TEST
-			/**echo "BEGIN";
+			echo "BEGIN";
 			echo "<br>0: ";
 			echo  $line_array[0];
 			echo "<br>1: ";
@@ -64,8 +65,6 @@ require "header.php"
 			echo $line_array[10];
 			echo "<br>11: ";
 			echo $line_array[11];
-			echo "<br>def: ";
-			echo $def[$i-1];
 			echo "<br>";**/
 			
 

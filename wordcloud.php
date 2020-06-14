@@ -13,12 +13,12 @@ require "header.php"
 
     <?php
     session_start();
-    $emaPath = $_SESSION["path"];
-    $basefn = $_SESSION["basefn"];
-    $carpeta= $_SESSION["carpeta"];
+    $results = $_SESSION["results"];
+    $fileName = $_SESSION["file"];
+    $directory= $_SESSION["directory"];
 
-    if (file_exists($emaPath)){
-        $file=$carpeta."/text.txt.png";
+    if (file_exists($results)){
+        $file=$directory."/".$fileName.".png";
         $wordcloud='<img src="'.$file.'">';
         echo "<div class='image' id='emadiv' style='text-align: center;'>".$wordcloud."</div>";
     }

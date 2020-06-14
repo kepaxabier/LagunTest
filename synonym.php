@@ -19,11 +19,11 @@ require "header.php"
 	</nav>
 <?php
 	session_start();
-	$emaPath = $_SESSION["path"];
+	$results = $_SESSION["results"];
 
-	if (file_exists($emaPath)){
+	if (file_exists($results)){
 
-	$progema = file_get_contents($emaPath);
+	$progema = file_get_contents($results);
 	$synomy="<br>";
 	$numberofsentences=0;
 	$h=0;
