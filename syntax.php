@@ -60,7 +60,7 @@ function getDesc($arg){
 			$desc = array("Punctuation", "Puntuazioa", "Puntuación");
 			break;
 		case "v":
-			$desc = array("Main verb", "Aditz nagusia", "Verbo principal");
+			$desc = array("Head of the sentence", "Aditzaren burua", "Cabecera de oración");
 			break;
 		case "vo":
 			$desc = array("Vocative", "Bokatiboa", "Vocativo");

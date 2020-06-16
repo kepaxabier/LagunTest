@@ -1022,9 +1022,9 @@ class Word:
 #vocative(vocative)	VOC	Vocative	Bokatiboa	Vocativo
 #xcomp(open clausal complement)	A	Core argument (other)	Bestelako osagarria	otro complemento
         if language == "spanish" or language == "english" or language == "basque":
-            if self.dependency_relation == "acl" or self.dependency_relation == "amod" or self.dependency_relation == "advcl" or self.dependency_relation == "advmod" or self.dependency_relation == "appos" or self.dependency_relation == "nmod" or self.dependency_relation == "nummod":
+            if self.dependency_relation == "acl" or self.dependency_relation == "amod" or self.dependency_relation == "advcl" or self.dependency_relation == "advmod" or self.dependency_relation == "appos" or self.dependency_relation == "nmod" or self.dependency_relation == "nummod" or self.dependency_relation == "relcl" or self.dependency_relation == "npmod" or self.dependency_relation == "poss" or self.dependency_relation == "npmod":
                 dep="m"
-            if self.dependency_relation == "csubj" or self.dependency_relation == "nsubj":
+            if self.dependency_relation == "csubj" or self.dependency_relation == "nsubj" or self.dependency_relation == "pass":
                 dep="s"
             if self.dependency_relation == "punct":
                 dep="p"
@@ -1034,9 +1034,9 @@ class Word:
                 dep="o"
             if self.dependency_relation == "iobj":
                 dep="io"
-            if self.dependency_relation == "conj" or  self.dependency_relation == "cc":
+            if self.dependency_relation == "conj" or  self.dependency_relation == "cc" or self.dependency_relation == "preconj":
                 dep="lo"
-            if self.dependency_relation == "aux":
+            if self.dependency_relation == "aux" or self.dependency_relation == "pass":
                 dep="au"
             if self.dependency_relation == "case":
                 dep="ca"
@@ -1044,11 +1044,11 @@ class Word:
                 dep="a"
             if self.dependency_relation == "cop":
                 dep="c"            
-            if self.dependency_relation == "det":
+            if self.dependency_relation == "det" or self.dependency_relation == "predet":
                 dep="de"
             if self.dependency_relation == "vocative":
                 dep="vo"
-            if self.dependency_relation == "compound" or self.dependency_relation == "fixed" or self.dependency_relation == "flat":
+            if self.dependency_relation == "compound" or self.dependency_relation == "fixed" or self.dependency_relation == "flat" or self.dependency_relation == "prt":
                 dep="mw"
             if self.dependency_relation == "discourse":
                 dep="_"
